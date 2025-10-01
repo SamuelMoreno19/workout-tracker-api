@@ -6,3 +6,6 @@ const v1Routes = require('./v1');
 
 //Configurar rutas versionadas
 router.use('/v1', v1Routes);
+
+
+module.exports = router;
