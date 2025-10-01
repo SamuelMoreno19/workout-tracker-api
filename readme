@@ -1,0 +1,115 @@
+📘 README – Documentación de la API de Usuarios
+===============================================================
+
+Base path: /users
+
+---------------------------------------------------------------
+GET /users
+---------------------------------------------------------------
+✅ Listar todos los usuarios con filtros opcionales
+
+🔸 Query Params:
+- role (string): filtrar por rol (ej: "user")
+- search (string): buscar por nombre (parcial o completo)
+
+📥 Ejemplo:
+GET /users?role=user&search=samuel
+
+📤 Response 200 OK:
+[
+  {
+    "id": "b42f53fa-7b30-4b91-8d36-dc1c6ef27611",
+    "name": "Samuel Morneo",
+    "email": "samuelmorneau@example.com",
+    "role": "user",
+    "createdAt": "2025-09-12T12:00:00Z"
+  }
+]
+
+---------------------------------------------------------------
+GET /users/:id
+---------------------------------------------------------------
+✅ Obtener un usuario por ID
+
+📥 Ejemplo:
+GET /users/b42f53fa-7b30-4b91-8d36-dc1c6ef27611
+
+📤 Response 200 OK:
+{
+  "id": "...",
+  "name": "...",
+  "email": "...",
+  "role": "...",
+  "createdAt": "..."
+}
+
+📤 Response 404 Not Found:
+{ "error": "Usuario no encontrado" }
+
+---------------------------------------------------------------
+POST /users
+---------------------------------------------------------------
+✅ Crear un nuevo usuario
+
+📥 Body (JSON):
+{
+  "name": "Carlos",
+  "email": "carlos@example.com",
+  "role": "admin"
+}
+
+📤 Response 201 Created:
+{
+  "id": "1696092345678",
+  "name": "Carlos",
+  "email": "carlos@example.com",
+  "role": "admin",
+  "createdAt": "2025-09-30T10:15:00.123Z"
+}
+
+📤 Response 400 Bad Request:
+{ "error": "Name y email son requeridos" }
+
+---------------------------------------------------------------
+PUT /users/:id
+---------------------------------------------------------------
+✅ Actualizar un usuario por ID
+
+📥 Body (JSON):
+{
+  "name": "Carlos Actualizado",
+  "email": "nuevoemail@example.com",
+  "role": "user"
+}
+
+📤 Response 200 OK:
+{
+  "id": "...",
+  "name": "Carlos Actualizado",
+  "email": "nuevoemail@example.com",
+  "role": "user",
+  "createdAt": "..."
+}
+
+📤 Response 400 Bad Request:
+{ "error": "Name y email son requeridos" }
+
+📤 Response 404 Not Found:
+{ "error": "Usuario no encontrado" }
+
+---------------------------------------------------------------
+DELETE /users/:id
+---------------------------------------------------------------
+✅ Eliminar un usuario por ID
+
+📤 Response 200 OK:
+{ "deleted": "ID_DEL_USUARIO" }
+
+📤 Response 404 Not Found:
+{ "error": "Usuario no encontrado" }
+
+---------------------------------------------------------------
+📝 Notas:
+- Esta API utiliza almacenamiento en memoria (no persistente).
+- Al reiniciar el servidor, los datos se restablecen.
+- El ID se genera con Date.now() como valor temporal. Se puede usar `uuid` para una mejor práctica.
