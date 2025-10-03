@@ -130,3 +130,12 @@ const deleteWorkoutSchedule = (req, res) => {
     res.status(204).send();
 };
 
+// Exportar controladores
+module.exports = {
+    getWorkoutSchedules,
+    getWorkoutScheduleById,
+    createWorkoutSchedule,
+    updateWorkoutSchedule,
+    patchWorkoutSchedule,
+    deleteWorkoutSchedule,
+};
