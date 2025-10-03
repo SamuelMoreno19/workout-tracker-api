@@ -104,3 +104,13 @@ const deleteWorkoutPlan = (req, res) => {
     workoutPlans.splice(index, 1);
     res.status(204).send();
 };
+
+// Exportar controladores
+module.exports = {
+    getWorkoutPlans,
+    getWorkoutPlanById,
+    createWorkoutPlan,
+    updateWorkoutPlan,
+    patchWorkoutPlan,
+    deleteWorkoutPlan,
+};
