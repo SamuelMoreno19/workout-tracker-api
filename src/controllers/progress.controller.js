@@ -113,3 +113,13 @@ const deleteProgress = (req, res) => {
     progress.splice(index, 1);
     res.status(204).send();
 };
+
+// Exportar controladores
+module.exports = {
+    getProgress,
+    getProgressById,
+    createProgress,
+    updateProgress,
+    patchProgress,
+    deleteProgress,
+};
