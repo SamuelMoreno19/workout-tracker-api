@@ -70,3 +70,52 @@ const createWorkoutSchedule = (req, res) => {
     workoutSchedules.push(newSchedule);
     res.status(201).json(newSchedule);
 };
+
+// PUT /workout-schedules/:id → actualización total
+const updateWorkoutSchedule = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { userId, planId, date, startTime, durationMinutes, status } = req.body;
+
+    const index = workoutSchedules.findIndex(s => s.id === id);
+    if (index === -1) return res.status(404).json({ error: "Programación no encontrada" });
+
+    if (!userId || !planId || !date || !startTime || durationMinutes === undefined) {
+        return res.status(400).json({ error: "Usuario, plan de entrenamiento, fecha, hora y duración son requeridos para actualización completa" });
+    }
+
+    workoutSchedules[index] = {
+        id: id,
+        userId: parseInt(userId, 10),
+        planId: parseInt(planId, 10),
+        date,
+        startTime,
+        durationMinutes: parseInt(durationMinutes, 10),
+        status: status || "scheduled",
+        createdAt: workoutSchedules[index].createdAt,
+    };
+
+    res.status(200).json(workoutSchedules[index]);
+};
+
+// PATCH /workout-schedules/:id → actualización parcial
+const patchWorkoutSchedule = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { userId, planId, date, startTime, durationMinutes, status } = req.body;
+
+    const index = workoutSchedules.findIndex(s => s.id === id);
+    if (index === -1) return res.status(404).json({ error: "Programación no encontrada" });
+
+    workoutSchedules[index] = {
+        ...workoutSchedules[index],
+        ...(userId && { userId: parseInt(userId, 10) }),
+        ...(planId && { planId: parseInt(planId, 10) }),
+        ...(date && { date }),
+        ...(startTime && { startTime }),
+        ...(durationMinutes && { durationMinutes: parseInt(durationMinutes, 10) }),
+        ...(status && { status }),
+        id: id
+    };
+
+    res.status(200).json(workoutSchedules[index]);
+};
+
