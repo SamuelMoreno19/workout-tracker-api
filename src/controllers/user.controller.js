@@ -2,6 +2,14 @@
 let users = [
     { id: 1, name: "Samuel Moreno", email: "samuel@example.com", role: "user", createdAt: new Date().toISOString() },
     { id: 2, name: "Laura Gómez", email: "laura@example.com", role: "admin", createdAt: new Date().toISOString() },
+    { id: 3, name: "Andrés Pérez", email: "andresp@example.com", role: "user", createdAt: new Date().toISOString() },
+    { id: 4, name: "Camila Torres", email: "camilat@example.com", role: "admin", createdAt: new Date().toISOString() },
+    { id: 5, name: "Diego Ramírez", email: "diegor@example.com", role: "user", createdAt: new Date().toISOString() },
+    { id: 6, name: "Valentina Ruiz", email: "valenruiz@example.com", role: "user", createdAt: new Date().toISOString() },
+    { id: 7, name: "Mateo Cárdenas", email: "mateoc@example.com", role: "admin", createdAt: new Date().toISOString() },
+    { id: 8, name: "Juliana López", email: "julil@example.com", role: "user", createdAt: new Date().toISOString() },
+    { id: 9, name: "Esteban Hernández", email: "estebanh@example.com", role: "user", createdAt: new Date().toISOString() },
+    { id: 10, name: "Sofía Castillo", email: "sofiac@example.com", role: "admin", createdAt: new Date().toISOString() },
 ];
 
 // GET /users → lista con filtros
@@ -88,9 +96,7 @@ const patchUser = (req, res) => {
     res.status(200).json(users[index]);
 };
 
-
 // DELETE /users/:id → eliminación
-
 const deleteUser = (req, res) => {
     const id = parseInt(req.params.id, 10);
     const index = users.findIndex(u => u.id === id);
