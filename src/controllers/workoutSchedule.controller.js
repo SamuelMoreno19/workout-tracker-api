@@ -119,3 +119,14 @@ const patchWorkoutSchedule = (req, res) => {
     res.status(200).json(workoutSchedules[index]);
 };
 
+// DELETE /workout-schedules/:id → eliminación
+const deleteWorkoutSchedule = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const index = workoutSchedules.findIndex(s => s.id === id);
+
+    if (index === -1) return res.status(404).json({ error: "Programación no encontrada" });
+
+    workoutSchedules.splice(index, 1);
+    res.status(204).send();
+};
+
