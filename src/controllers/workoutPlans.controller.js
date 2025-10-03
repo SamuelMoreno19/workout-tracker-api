@@ -94,3 +94,13 @@ const patchWorkoutPlan = (req, res) => {
     res.status(200).json(workoutPlans[index]);
 };
 
+// DELETE /workout-plans/:id → eliminación
+const deleteWorkoutPlan = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const index = workoutPlans.findIndex(p => p.id === id);
+
+    if (index === -1) return res.status(404).json({ error: "Plan de entrenamiento no encontrado" });
+
+    workoutPlans.splice(index, 1);
+    res.status(204).send();
+};
