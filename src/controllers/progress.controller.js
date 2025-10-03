@@ -103,3 +103,13 @@ const patchProgress = (req, res) => {
     res.status(200).json(progress[index]);
 };
 
+// DELETE /progress/:id → eliminación
+const deleteProgress = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const index = progress.findIndex(p => p.id === id);
+
+    if (index === -1) return res.status(404).json({ error: "Registro de progreso no encontrado" });
+
+    progress.splice(index, 1);
+    res.status(204).send();
+};
