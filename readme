@@ -1,8 +1,7 @@
-📘 README – Documentación de la API de Usuarios
+Documentación de la API de Usuarios
 ===============================================================
 
-Base path: /users
-
+Users API
 ---------------------------------------------------------------
 GET /users
 ---------------------------------------------------------------
@@ -113,3 +112,122 @@ DELETE /users/:id
 - Esta API utiliza almacenamiento en memoria (no persistente).
 - Al reiniciar el servidor, los datos se restablecen.
 - El ID se genera con Date.now() como valor temporal. Se puede usar `uuid` para una mejor práctica.
+------------------------------------------------------------------------------------
+
+Exercises/API
+La ruta base para todos los endpoints es /exercises.
+
+Método	Ruta	Descripción
+GET	/exercises	Obtiene la lista de ejercicios, con soporte para filtros y límite.
+GET	/exercises/:id	Obtiene un ejercicio específico por ID.
+POST	/exercises	Crea un nuevo ejercicio.
+PUT	/exercises/:id	Actualización total de un ejercicio existente.
+PATCH	/exercises/:id	Actualización parcial de un ejercicio existente.
+DELETE	/exercises/:id	Elimina un ejercicio específico.
+
+Exportar a Hojas de cálculo
+🔎 GET /exercises (Obtener Lista)
+Permite recuperar la colección completa de ejercicios. Se pueden aplicar filtros a través de Query Strings.
+
+Parámetros de Consulta (Query Strings)
+Parámetro	Tipo	Descripción	Ejemplo
+muscleGroup	string	Filtra ejercicios por grupo muscular.	?muscleGroup=Piernas
+category	string	Filtra ejercicios por categoría.	?category=Calistenia
+difficulty	string	Filtra ejercicios por nivel de dificultad.	?difficulty=Intermedio
+limit	number	Limita el número de resultados devueltos.	?limit=5
+
+Exportar a Hojas de cálculo
+Ejemplo de Request
+GET /exercises?muscleGroup=Pecho&limit=2
+
+Ejemplos de Response
+Código de Estado	Descripción	Cuerpo de Respuesta (Body)
+200 OK	Éxito. Retorna la lista filtrada.	[ { "id": 2, "name": "Press Banca", ... }, { "id": 4, "name": "Flexiones", ... } ]
+200 OK	No se encontraron resultados.	{"message": "No hay ejercicios disponibles"}
+
+Exportar a Hojas de cálculo
+🧠 GET /exercises/:id (Obtener Individual)
+Obtiene un único ejercicio usando su identificador.
+
+Ejemplo de Request
+GET /exercises/1
+
+Ejemplos de Response
+Código de Estado	Descripción	Cuerpo de Respuesta (Body)
+200 OK	Éxito. Retorna el ejercicio.	{"id": 1, "name": "Sentadilla con Barra", "muscleGroup": "Piernas", ...}
+400 Bad Request	ID no es un número.	{"error": "El ID debe ser numérico"}
+404 Not Found	Ejercicio no encontrado.	{"error": "Ejercicio no encontrado"}
+
+Exportar a Hojas de cálculo
+✨ POST /exercises (Crear)
+Crea un nuevo ejercicio. Requiere name, muscleGroup, y category.
+
+Ejemplo de Request
+JSON
+
+POST /exercises
+Content-Type: application/json
+
+{
+    "name": "Remo con Mancuerna",
+    "muscleGroup": "Espalda",
+    "category": "Hipertrofia",
+    "difficulty": "Intermedio"
+}
+Ejemplos de Response
+Código de Estado	Descripción	Cuerpo de Respuesta (Body)
+201 Created	Éxito. Recurso creado.	{"id": 11, "name": "Remo con Mancuerna", ...}
+400 Bad Request	Faltan campos requeridos.	{"error": "Nombre, grupo muscular y categoría son requeridos"}
+
+Exportar a Hojas de cálculo
+🔄 PUT /exercises/:id (Actualización Total)
+Reemplaza completamente un ejercicio existente. Requiere todos los campos (name, muscleGroup, category).
+
+Ejemplo de Request
+JSON
+
+PUT /exercises/6
+Content-Type: application/json
+
+{
+    "name": "Martillo de Bíceps",
+    "muscleGroup": "Brazos",
+    "category": "Hipertrofia",
+    "difficulty": "Principiante"
+}
+Ejemplos de Response
+Código de Estado	Descripción
+200 OK	Éxito. Retorna el objeto actualizado.
+400 Bad Request	Faltan campos requeridos.
+404 Not Found	Ejercicio no encontrado.
+
+Exportar a Hojas de cálculo
+🩹 PATCH /exercises/:id (Actualización Parcial)
+Actualiza uno o varios campos de un ejercicio existente. No requiere todos los campos.
+
+Ejemplo de Request
+JSON
+
+PATCH /exercises/6
+Content-Type: application/json
+
+{
+    "difficulty": "Avanzado"
+}
+Ejemplos de Response
+Código de Estado	Descripción
+200 OK	Éxito. Retorna el objeto actualizado.
+404 Not Found	Ejercicio no encontrado.
+
+Exportar a Hojas de cálculo
+🗑️ DELETE /exercises/:id (Eliminación)
+Elimina un ejercicio por su ID.
+
+Ejemplo de Request
+DELETE /exercises/10
+
+Ejemplos de Response
+Código de Estado	Descripción
+204 No Content	Éxito. Eliminación completada. (No devuelve cuerpo).
+404 Not Found	Ejercicio no encontrado.
+
