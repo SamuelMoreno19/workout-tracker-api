@@ -66,3 +66,31 @@ const createWorkoutPlan = (req, res) => {
     res.status(201).json(newPlan);
 };
 
+// PUT /workout-plans/:id → actualización total
+const updateWorkoutPlan = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { userId, name } = req.body;
+
+    const index = workoutPlans.findIndex(p => p.id === id);
+    if (index === -1) return res.status(404).json({ error: "Plan de entrenamiento no encontrado" });
+
+    if (!userId || !name) {
+        return res.status(400).json({ error: "ID de usuario y nombre son requeridos para actualización completa" });
+    }
+
+    workoutPlans[index] = { ...workoutPlans[index], userId: parseInt(userId, 10), name };
+    res.status(200).json(workoutPlans[index]);
+};
+
+// PATCH /workout-plans/:id → actualización parcial
+const patchWorkoutPlan = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { userId, name } = req.body;
+
+    const index = workoutPlans.findIndex(p => p.id === id);
+    if (index === -1) return res.status(404).json({ error: "Plan de entrenamiento no encontrado" });
+
+    workoutPlans[index] = { ...workoutPlans[index], ...(userId && { userId: parseInt(userId, 10) }), ...(name && { name }) };
+    res.status(200).json(workoutPlans[index]);
+};
+
