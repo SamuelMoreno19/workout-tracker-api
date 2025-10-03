@@ -50,3 +50,25 @@ const getExerciseById = (req, res) => {
 
     res.status(200).json(exercise);
 };
+
+
+// POST /exercises → crear ejercicio
+const createExercise = (req, res) => {
+    const { name, muscleGroup, category, difficulty } = req.body;
+
+    if (!name || !muscleGroup || !category) {
+        return res.status(400).json({ error: "Nombre, grupo muscular y categoría son requeridos" });
+    }
+
+    const newExercise = {
+        id: exercises.length > 0 ? exercises[exercises.length - 1].id + 1 : 1,
+        name,
+        muscleGroup,
+        category,
+        difficulty: difficulty || "Principiante",
+        createdAt: new Date().toISOString(),
+    };
+
+    exercises.push(newExercise);
+    res.status(201).json(newExercise);
+};
