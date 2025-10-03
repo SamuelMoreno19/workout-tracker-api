@@ -111,3 +111,13 @@ const deleteExercise = (req, res) => {
     exercises.splice(index, 1);
     res.status(204).send();
 }; // 204 No Content
+
+// Exportar controladores
+module.exports = {
+    getExercises,
+    getExerciseById,
+    createExercise,
+    updateExercise,
+    patchExercise,
+    deleteExercise,
+};
