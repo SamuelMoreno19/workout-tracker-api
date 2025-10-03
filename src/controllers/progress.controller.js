@@ -51,3 +51,26 @@ const getProgressById = (req, res) => {
 
     res.status(200).json(progressItem);
 };
+
+// POST /progress → crear registro de progreso
+const createProgress = (req, res) => {
+    const { userId, workoutPlanId, date, durationMinutes, caloriesBurned, notes } = req.body;
+
+    if (!userId || !workoutPlanId || !date || !durationMinutes) {
+        return res.status(400).json({ error: "Usuario, plan de entrenamiento, fecha y duración son requeridos" });
+    }
+
+    const newProgress = {
+        id: progress.length > 0 ? progress[progress.length - 1].id + 1 : 1,
+        userId: parseInt(userId, 10),
+        workoutPlanId: parseInt(workoutPlanId, 10),
+        date,
+        durationMinutes: parseInt(durationMinutes, 10),
+        caloriesBurned: caloriesBurned || 0,
+        notes: notes || "",
+        createdAt: new Date().toISOString(),
+    };
+
+    progress.push(newProgress);
+    res.status(201).json(newProgress);
+};
