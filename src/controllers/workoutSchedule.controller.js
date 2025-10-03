@@ -48,3 +48,25 @@ const getWorkoutScheduleById = (req, res) => {
     res.status(200).json(schedule);
 };
 
+// POST /workout-schedules → crear programación
+const createWorkoutSchedule = (req, res) => {
+    const { userId, planId, date, startTime, durationMinutes } = req.body;
+
+    if (!userId || !planId || !date || !startTime || durationMinutes === undefined) {
+        return res.status(400).json({ error: "Usuario, plan de entrenamiento, fecha, hora y duración son requeridos" });
+    }
+
+    const newSchedule = {
+        id: workoutSchedules.length > 0 ? workoutSchedules[workoutSchedules.length - 1].id + 1 : 1,
+        userId: parseInt(userId, 10),
+        planId: parseInt(planId, 10),
+        date,
+        startTime,
+        durationMinutes: parseInt(durationMinutes, 10),
+        status: req.body.status || "scheduled",
+        createdAt: new Date().toISOString(),
+    };
+
+    workoutSchedules.push(newSchedule);
+    res.status(201).json(newSchedule);
+};
