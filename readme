@@ -1,115 +1,214 @@
-📘 README – Documentación de la API de Usuarios
-===============================================================
+📚 Documentación Consolidada de la API de Fitness
+Esta documentación cubre los endpoints para los módulos de Usuarios, Ejercicios y Planes de Entrenamiento.
 
-Base path: /users
+🧑‍💻 Users API (/users)
+Método	Ruta	Descripción
+GET	/users	Listar todos con filtros (role, search).
+GET	/users/:id	Obtener usuario por ID.
+POST	/users	Crear un nuevo usuario (Requiere name, email).
+PUT	/users/:id	Actualización total (Requiere name, email).
+DELETE	/users/:id	Eliminar usuario por ID.
 
----------------------------------------------------------------
-GET /users
----------------------------------------------------------------
-✅ Listar todos los usuarios con filtros opcionales
+Exportar a Hojas de cálculo
+GET /users (Lista)
+Query Params: role (string), search (string).
+📥 Ejemplo: GET /users?role=user
+📤 Response 200 OK: [ { "id": "...", "name": "...", "role": "user" } ]
 
-🔸 Query Params:
-- role (string): filtrar por rol (ej: "user")
-- search (string): buscar por nombre (parcial o completo)
+GET /users/:id (Individual)
+📥 Ejemplo: GET /users/1
+📤 Response 200 OK: { "id": 1, "name": "..." }
+❌ Fallos: 404 Not Found (Usuario no encontrado).
 
-📥 Ejemplo:
-GET /users?role=user&search=samuel
+POST /users (Crear)
+📥 Body (JSON): { "name": "Carlos", "email": "carlos@example.com" }
+📤 Response 201 Created: Retorna el objeto creado con su ID.
+❌ Fallos: 400 Bad Request (Faltan name o email).
 
-📤 Response 200 OK:
-[
-  {
-    "id": "b42f53fa-7b30-4b91-8d36-dc1c6ef27611",
-    "name": "Samuel Morneo",
-    "email": "samuelmorneau@example.com",
-    "role": "user",
-    "createdAt": "2025-09-12T12:00:00Z"
-  }
-]
+PUT /users/:id & PATCH /users/:id (Actualizar)
+Método	Requisitos	Response 200 OK	Fallos
+PUT	Requiere todos los campos.	Objeto actualizado.	400 Bad Request (Faltan campos), 404 Not Found.
+PATCH	Envía solo campos a modificar.	Objeto actualizado.	404 Not Found.
 
----------------------------------------------------------------
-GET /users/:id
----------------------------------------------------------------
-✅ Obtener un usuario por ID
+Exportar a Hojas de cálculo
+DELETE /users/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found (Usuario no encontrado).
 
-📥 Ejemplo:
-GET /users/b42f53fa-7b30-4b91-8d36-dc1c6ef27611
+💪 Exercises API (/exercises)
+Método	Ruta	Descripción
+GET	/exercises	Listar con filtros (muscleGroup, category, limit, etc.).
+GET	/exercises/:id	Obtener ejercicio por ID.
+POST	/exercises	Crear ejercicio (Requiere name, muscleGroup, category).
+PUT/PATCH	/exercises/:id	Actualización total/parcial.
+DELETE	/exercises/:id	Eliminar ejercicio.
 
-📤 Response 200 OK:
-{
-  "id": "...",
-  "name": "...",
-  "email": "...",
-  "role": "...",
-  "createdAt": "..."
-}
+Exportar a Hojas de cálculo
+GET /exercises (Lista)
+Query Params: muscleGroup, category, difficulty, limit.
+📥 Ejemplo: GET /exercises?muscleGroup=Pecho&limit=2
+📤 Response 200 OK: [ { "id": 2, "name": "Press Banca", ... } ]
+⚠️ Nota: Devuelve {"message": "No hay ejercicios disponibles"} si no hay coincidencias.
 
-📤 Response 404 Not Found:
-{ "error": "Usuario no encontrado" }
+GET /exercises/:id (Individual)
+📥 Ejemplo: GET /exercises/1
+📤 Response 200 OK: Retorna el objeto del ejercicio.
+❌ Fallos: 400 Bad Request (ID no numérico), 404 Not Found.
 
----------------------------------------------------------------
-POST /users
----------------------------------------------------------------
-✅ Crear un nuevo usuario
+POST /exercises (Crear)
+📥 Body (JSON): { "name": "Remo con Mancuerna", "muscleGroup": "Espalda", "category": "Hipertrofia" }
+📤 Response 201 Created: Retorna el nuevo objeto.
+❌ Fallos: 400 Bad Request (Faltan name, muscleGroup, o category).
 
+🗓️ Workout Plans API (/workout-plans)
+Método	Ruta	Descripción
+GET	/workout-plans	Listar con filtros (userId, limit).
+GET	/workout-plans/:id	Obtener plan por ID.
+POST	/workout-plans	Crear plan (Requiere userId, name).
+PUT/PATCH	/workout-plans/:id	Actualización total/parcial.
+DELETE	/workout-plans/:id	Eliminar plan.
+
+Exportar a Hojas de cálculo
+GET /workout-plans (Lista)
+Query Params: userId (number), limit (number).
+📥 Ejemplo: GET /workout-plans?userId=2
+📤 Response 200 OK: Retorna la lista filtrada.
+
+POST /workout-plans (Crear)
+📥 Body (JSON): { "userId": 7, "name": "Rutina de Descanso Activo" }
+📤 Response 201 Created: Retorna el nuevo plan.
+❌ Fallos: 400 Bad Request (Faltan userId o name).
+
+PUT /workout-plans/:id (Actualización Total)
+Requisitos: Requiere userId y name en el cuerpo.
+❌ Fallos: 400 Bad Request (Faltan campos), 404 Not Found.
+
+DELETE /workout-plans/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found.
+
+-------------------------------------
+
+📈 Progress API (/progress)
+Este módulo gestiona el registro y seguimiento de métricas de entrenamiento completadas.
+
+Método	Ruta	Descripción
+GET	/progress	Listar con filtros (userId, workoutPlanId, date, limit).
+GET	/progress/:id	Obtener registro por ID.
+POST	/progress	Crear registro (Requiere userId, workoutPlanId, date, durationMinutes).
+PUT/PATCH	/progress/:id	Actualización total/parcial.
+DELETE	/progress/:id	Eliminar registro.
+
+Exportar a Hojas de cálculo
+GET /progress (Lista)
+Query Params: userId, workoutPlanId, date, limit.
+📥 Ejemplo: GET /progress?userId=1&limit=2
+📤 Response 200 OK: Retorna la lista filtrada de registros.
+
+POST /progress (Crear)
 📥 Body (JSON):
+
+JSON
+
 {
-  "name": "Carlos",
-  "email": "carlos@example.com",
-  "role": "admin"
+  "userId": 5, 
+  "workoutPlanId": 1, 
+  "date": "2024-01-18", 
+  "durationMinutes": 65
 }
+📤 Response 201 Created: Retorna el nuevo objeto.
+❌ Fallos: 400 Bad Request (Faltan userId, workoutPlanId, date, o durationMinutes).
 
-📤 Response 201 Created:
-{
-  "id": "1696092345678",
-  "name": "Carlos",
-  "email": "carlos@example.com",
-  "role": "admin",
-  "createdAt": "2025-09-30T10:15:00.123Z"
-}
+PUT /progress/:id (Actualización Total)
+Requisitos: Requiere todos los campos obligatorios del POST.
+❌ Fallos: 400 Bad Request (Faltan campos), 404 Not Found.
 
-📤 Response 400 Bad Request:
-{ "error": "Name y email son requeridos" }
+DELETE /progress/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found.
 
----------------------------------------------------------------
-PUT /users/:id
----------------------------------------------------------------
-✅ Actualizar un usuario por ID
+---------------------------------
 
+📅 Workout Schedules API (/workout-schedules)
+Este módulo gestiona la programación de planes de entrenamiento en fechas y horas específicas.
+
+Método	Ruta	Descripción
+GET	/workout-schedules	Listar programaciones con filtros (userId, status, limit).
+GET	/workout-schedules/:id	Obtener programación por ID.
+POST	/workout-schedules	Crear una nueva programación (Requiere userId, planId, date, startTime, durationMinutes).
+PUT/PATCH	/workout-schedules/:id	Actualización total/parcial.
+DELETE	/workout-schedules/:id	Eliminar programación.
+
+Exportar a Hojas de cálculo
+GET /workout-schedules (Lista)
+Query Params: userId (number), status (string), limit (number).
+📥 Ejemplo: GET /workout-schedules?userId=1&status=scheduled
+📤 Response 200 OK: Retorna la lista filtrada.
+⚠️ Nota: La búsqueda por status no distingue mayúsculas/minúsculas.
+
+POST /workout-schedules (Crear)
 📥 Body (JSON):
+
+JSON
+
 {
-  "name": "Carlos Actualizado",
-  "email": "nuevoemail@example.com",
-  "role": "user"
+  "userId": 1,
+  "planId": 9,
+  "date": "2024-01-22",
+  "startTime": "06:30",
+  "durationMinutes": 80
 }
+📤 Response 201 Created: Retorna el nuevo objeto.
+❌ Fallos: 400 Bad Request (Faltan userId, planId, date, startTime, o durationMinutes).
 
-📤 Response 200 OK:
+PUT /workout-schedules/:id (Actualización Total)
+Requisitos: Requiere todos los campos obligatorios del POST.
+❌ Fallos: 400 Bad Request (Faltan campos), 404 Not Found.
+
+DELETE /workout-schedules/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found.
+-------------------------------------
+
+📄 Reports API (/reports)
+Este módulo maneja los reportes detallados de sesiones de entrenamiento completadas, incluyendo métricas y notas.
+
+Método	Ruta	Descripción
+GET	/reports	Listar reportes con filtros (userId, workoutPlanId, date, limit).
+GET	/reports/:id	Obtener reporte por ID.
+POST	/reports	Crear reporte (Requiere userId, workoutPlanId, scheduleId, date, totalDuration).
+PUT/PATCH	/reports/:id	Actualización total/parcial.
+DELETE	/reports/:id	Eliminar reporte.
+
+Exportar a Hojas de cálculo
+GET /reports (Lista)
+Query Params: userId, workoutPlanId, date, limit.
+📥 Ejemplo: GET /reports?userId=1&date=2024-01-16
+📤 Response 200 OK: Retorna la lista filtrada de reportes.
+
+POST /reports (Crear)
+Campos requeridos: userId, workoutPlanId, scheduleId, date, totalDuration.
+📥 Body (JSON):
+
+JSON
+
 {
-  "id": "...",
-  "name": "Carlos Actualizado",
-  "email": "nuevoemail@example.com",
-  "role": "user",
-  "createdAt": "..."
+  "userId": 1,
+  "workoutPlanId": 9,
+  "scheduleId": 9,
+  "date": "2024-01-22",
+  "totalDuration": 80,
+  "caloriesBurned": 520
 }
+📤 Response 201 Created: Retorna el nuevo objeto.
+❌ Fallos: 400 Bad Request (Faltan campos requeridos).
 
-📤 Response 400 Bad Request:
-{ "error": "Name y email son requeridos" }
+PUT /reports/:id & PATCH /reports/:id (Actualizar)
+Método	Requisitos	Fallos Comunes
+PUT	Requiere todos los campos obligatorios del POST.	400 Bad Request (Faltan campos), 404 Not Found.
+PATCH	Envía solo campos a modificar.	404 Not Found.
 
-📤 Response 404 Not Found:
-{ "error": "Usuario no encontrado" }
-
----------------------------------------------------------------
-DELETE /users/:id
----------------------------------------------------------------
-✅ Eliminar un usuario por ID
-
-📤 Response 200 OK:
-{ "deleted": "ID_DEL_USUARIO" }
-
-📤 Response 404 Not Found:
-{ "error": "Usuario no encontrado" }
-
----------------------------------------------------------------
-📝 Notas:
-- Esta API utiliza almacenamiento en memoria (no persistente).
-- Al reiniciar el servidor, los datos se restablecen.
-- El ID se genera con Date.now() como valor temporal. Se puede usar `uuid` para una mejor práctica.
+Exportar a Hojas de cálculo
+DELETE /reports/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found.
