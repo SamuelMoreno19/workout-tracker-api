@@ -120,3 +120,14 @@ const patchReport = (req, res) => {
     };
     res.status(200).json(reports[index]);
 };
+
+// DELETE /reports/:id → eliminación
+const deleteReport = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const index = reports.findIndex(r => r.id === id);
+
+    if (index === -1) return res.status(404).json({ error: "Reporte no encontrado" });
+
+    reports.splice(index, 1);
+    res.status(204).send();
+};
