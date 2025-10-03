@@ -126,3 +126,45 @@ Requisitos: Requiere todos los campos obligatorios del POST.
 DELETE /progress/:id (Eliminar)
 📤 Response 204 No Content: Eliminación exitosa.
 ❌ Fallos: 404 Not Found.
+
+---------------------------------
+
+📅 Workout Schedules API (/workout-schedules)
+Este módulo gestiona la programación de planes de entrenamiento en fechas y horas específicas.
+
+Método	Ruta	Descripción
+GET	/workout-schedules	Listar programaciones con filtros (userId, status, limit).
+GET	/workout-schedules/:id	Obtener programación por ID.
+POST	/workout-schedules	Crear una nueva programación (Requiere userId, planId, date, startTime, durationMinutes).
+PUT/PATCH	/workout-schedules/:id	Actualización total/parcial.
+DELETE	/workout-schedules/:id	Eliminar programación.
+
+Exportar a Hojas de cálculo
+GET /workout-schedules (Lista)
+Query Params: userId (number), status (string), limit (number).
+📥 Ejemplo: GET /workout-schedules?userId=1&status=scheduled
+📤 Response 200 OK: Retorna la lista filtrada.
+⚠️ Nota: La búsqueda por status no distingue mayúsculas/minúsculas.
+
+POST /workout-schedules (Crear)
+📥 Body (JSON):
+
+JSON
+
+{
+  "userId": 1,
+  "planId": 9,
+  "date": "2024-01-22",
+  "startTime": "06:30",
+  "durationMinutes": 80
+}
+📤 Response 201 Created: Retorna el nuevo objeto.
+❌ Fallos: 400 Bad Request (Faltan userId, planId, date, startTime, o durationMinutes).
+
+PUT /workout-schedules/:id (Actualización Total)
+Requisitos: Requiere todos los campos obligatorios del POST.
+❌ Fallos: 400 Bad Request (Faltan campos), 404 Not Found.
+
+DELETE /workout-schedules/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found.
