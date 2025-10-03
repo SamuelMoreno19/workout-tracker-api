@@ -74,3 +74,32 @@ const createProgress = (req, res) => {
     progress.push(newProgress);
     res.status(201).json(newProgress);
 };
+
+// PUT /progress/:id → actualización total
+const updateProgress = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { userId, workoutPlanId, date, durationMinutes, caloriesBurned, notes } = req.body;
+
+    const index = progress.findIndex(p => p.id === id);
+    if (index === -1) return res.status(404).json({ error: "Registro de progreso no encontrado" });
+
+    if (!userId || !workoutPlanId || !date || !durationMinutes) {
+        return res.status(400).json({ error: "Usuario, plan de entrenamiento, fecha y duración son requeridos para actualización completa" });
+    }
+
+    progress[index] = { ...progress[index], userId: parseInt(userId, 10), workoutPlanId: parseInt(workoutPlanId, 10), date, durationMinutes: parseInt(durationMinutes, 10), caloriesBurned, notes };
+    res.status(200).json(progress[index]);
+};
+
+// PATCH /progress/:id → actualización parcial
+const patchProgress = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { userId, workoutPlanId, date, durationMinutes, caloriesBurned, notes } = req.body;
+
+    const index = progress.findIndex(p => p.id === id);
+    if (index === -1) return res.status(404).json({ error: "Registro de progreso no encontrado" });
+
+    progress[index] = { ...progress[index], ...(userId && { userId: parseInt(userId, 10) }), ...(workoutPlanId && { workoutPlanId: parseInt(workoutPlanId, 10) }), ...(date && { date }), ...(durationMinutes && { durationMinutes: parseInt(durationMinutes, 10) }), ...(caloriesBurned && { caloriesBurned }), ...(notes && { notes }) };
+    res.status(200).json(progress[index]);
+};
+
