@@ -1,233 +1,88 @@
-Documentación de la API de Usuarios
-===============================================================
+📚 Documentación Consolidada de la API de Fitness
+Esta documentación cubre los endpoints para los módulos de Usuarios, Ejercicios y Planes de Entrenamiento.
 
-Users API
----------------------------------------------------------------
-GET /users
----------------------------------------------------------------
-✅ Listar todos los usuarios con filtros opcionales
-
-🔸 Query Params:
-- role (string): filtrar por rol (ej: "user")
-- search (string): buscar por nombre (parcial o completo)
-
-📥 Ejemplo:
-GET /users?role=user&search=samuel
-
-📤 Response 200 OK:
-[
-  {
-    "id": "b42f53fa-7b30-4b91-8d36-dc1c6ef27611",
-    "name": "Samuel Morneo",
-    "email": "samuelmorneau@example.com",
-    "role": "user",
-    "createdAt": "2025-09-12T12:00:00Z"
-  }
-]
-
----------------------------------------------------------------
-GET /users/:id
----------------------------------------------------------------
-✅ Obtener un usuario por ID
-
-📥 Ejemplo:
-GET /users/b42f53fa-7b30-4b91-8d36-dc1c6ef27611
-
-📤 Response 200 OK:
-{
-  "id": "...",
-  "name": "...",
-  "email": "...",
-  "role": "...",
-  "createdAt": "..."
-}
-
-📤 Response 404 Not Found:
-{ "error": "Usuario no encontrado" }
-
----------------------------------------------------------------
-POST /users
----------------------------------------------------------------
-✅ Crear un nuevo usuario
-
-📥 Body (JSON):
-{
-  "name": "Carlos",
-  "email": "carlos@example.com",
-  "role": "admin"
-}
-
-📤 Response 201 Created:
-{
-  "id": "1696092345678",
-  "name": "Carlos",
-  "email": "carlos@example.com",
-  "role": "admin",
-  "createdAt": "2025-09-30T10:15:00.123Z"
-}
-
-📤 Response 400 Bad Request:
-{ "error": "Name y email son requeridos" }
-
----------------------------------------------------------------
-PUT /users/:id
----------------------------------------------------------------
-✅ Actualizar un usuario por ID
-
-📥 Body (JSON):
-{
-  "name": "Carlos Actualizado",
-  "email": "nuevoemail@example.com",
-  "role": "user"
-}
-
-📤 Response 200 OK:
-{
-  "id": "...",
-  "name": "Carlos Actualizado",
-  "email": "nuevoemail@example.com",
-  "role": "user",
-  "createdAt": "..."
-}
-
-📤 Response 400 Bad Request:
-{ "error": "Name y email son requeridos" }
-
-📤 Response 404 Not Found:
-{ "error": "Usuario no encontrado" }
-
----------------------------------------------------------------
-DELETE /users/:id
----------------------------------------------------------------
-✅ Eliminar un usuario por ID
-
-📤 Response 200 OK:
-{ "deleted": "ID_DEL_USUARIO" }
-
-📤 Response 404 Not Found:
-{ "error": "Usuario no encontrado" }
-
----------------------------------------------------------------
-📝 Notas:
-- Esta API utiliza almacenamiento en memoria (no persistente).
-- Al reiniciar el servidor, los datos se restablecen.
-- El ID se genera con Date.now() como valor temporal. Se puede usar `uuid` para una mejor práctica.
-------------------------------------------------------------------------------------
-
-Exercises/API
-La ruta base para todos los endpoints es /exercises.
-
+🧑‍💻 Users API (/users)
 Método	Ruta	Descripción
-GET	/exercises	Obtiene la lista de ejercicios, con soporte para filtros y límite.
-GET	/exercises/:id	Obtiene un ejercicio específico por ID.
-POST	/exercises	Crea un nuevo ejercicio.
-PUT	/exercises/:id	Actualización total de un ejercicio existente.
-PATCH	/exercises/:id	Actualización parcial de un ejercicio existente.
-DELETE	/exercises/:id	Elimina un ejercicio específico.
+GET	/users	Listar todos con filtros (role, search).
+GET	/users/:id	Obtener usuario por ID.
+POST	/users	Crear un nuevo usuario (Requiere name, email).
+PUT	/users/:id	Actualización total (Requiere name, email).
+DELETE	/users/:id	Eliminar usuario por ID.
 
 Exportar a Hojas de cálculo
-🔎 GET /exercises (Obtener Lista)
-Permite recuperar la colección completa de ejercicios. Se pueden aplicar filtros a través de Query Strings.
+GET /users (Lista)
+Query Params: role (string), search (string).
+📥 Ejemplo: GET /users?role=user
+📤 Response 200 OK: [ { "id": "...", "name": "...", "role": "user" } ]
 
-Parámetros de Consulta (Query Strings)
-Parámetro	Tipo	Descripción	Ejemplo
-muscleGroup	string	Filtra ejercicios por grupo muscular.	?muscleGroup=Piernas
-category	string	Filtra ejercicios por categoría.	?category=Calistenia
-difficulty	string	Filtra ejercicios por nivel de dificultad.	?difficulty=Intermedio
-limit	number	Limita el número de resultados devueltos.	?limit=5
+GET /users/:id (Individual)
+📥 Ejemplo: GET /users/1
+📤 Response 200 OK: { "id": 1, "name": "..." }
+❌ Fallos: 404 Not Found (Usuario no encontrado).
 
-Exportar a Hojas de cálculo
-Ejemplo de Request
-GET /exercises?muscleGroup=Pecho&limit=2
+POST /users (Crear)
+📥 Body (JSON): { "name": "Carlos", "email": "carlos@example.com" }
+📤 Response 201 Created: Retorna el objeto creado con su ID.
+❌ Fallos: 400 Bad Request (Faltan name o email).
 
-Ejemplos de Response
-Código de Estado	Descripción	Cuerpo de Respuesta (Body)
-200 OK	Éxito. Retorna la lista filtrada.	[ { "id": 2, "name": "Press Banca", ... }, { "id": 4, "name": "Flexiones", ... } ]
-200 OK	No se encontraron resultados.	{"message": "No hay ejercicios disponibles"}
-
-Exportar a Hojas de cálculo
-🧠 GET /exercises/:id (Obtener Individual)
-Obtiene un único ejercicio usando su identificador.
-
-Ejemplo de Request
-GET /exercises/1
-
-Ejemplos de Response
-Código de Estado	Descripción	Cuerpo de Respuesta (Body)
-200 OK	Éxito. Retorna el ejercicio.	{"id": 1, "name": "Sentadilla con Barra", "muscleGroup": "Piernas", ...}
-400 Bad Request	ID no es un número.	{"error": "El ID debe ser numérico"}
-404 Not Found	Ejercicio no encontrado.	{"error": "Ejercicio no encontrado"}
+PUT /users/:id & PATCH /users/:id (Actualizar)
+Método	Requisitos	Response 200 OK	Fallos
+PUT	Requiere todos los campos.	Objeto actualizado.	400 Bad Request (Faltan campos), 404 Not Found.
+PATCH	Envía solo campos a modificar.	Objeto actualizado.	404 Not Found.
 
 Exportar a Hojas de cálculo
-✨ POST /exercises (Crear)
-Crea un nuevo ejercicio. Requiere name, muscleGroup, y category.
+DELETE /users/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found (Usuario no encontrado).
 
-Ejemplo de Request
-JSON
-
-POST /exercises
-Content-Type: application/json
-
-{
-    "name": "Remo con Mancuerna",
-    "muscleGroup": "Espalda",
-    "category": "Hipertrofia",
-    "difficulty": "Intermedio"
-}
-Ejemplos de Response
-Código de Estado	Descripción	Cuerpo de Respuesta (Body)
-201 Created	Éxito. Recurso creado.	{"id": 11, "name": "Remo con Mancuerna", ...}
-400 Bad Request	Faltan campos requeridos.	{"error": "Nombre, grupo muscular y categoría son requeridos"}
+💪 Exercises API (/exercises)
+Método	Ruta	Descripción
+GET	/exercises	Listar con filtros (muscleGroup, category, limit, etc.).
+GET	/exercises/:id	Obtener ejercicio por ID.
+POST	/exercises	Crear ejercicio (Requiere name, muscleGroup, category).
+PUT/PATCH	/exercises/:id	Actualización total/parcial.
+DELETE	/exercises/:id	Eliminar ejercicio.
 
 Exportar a Hojas de cálculo
-🔄 PUT /exercises/:id (Actualización Total)
-Reemplaza completamente un ejercicio existente. Requiere todos los campos (name, muscleGroup, category).
+GET /exercises (Lista)
+Query Params: muscleGroup, category, difficulty, limit.
+📥 Ejemplo: GET /exercises?muscleGroup=Pecho&limit=2
+📤 Response 200 OK: [ { "id": 2, "name": "Press Banca", ... } ]
+⚠️ Nota: Devuelve {"message": "No hay ejercicios disponibles"} si no hay coincidencias.
 
-Ejemplo de Request
-JSON
+GET /exercises/:id (Individual)
+📥 Ejemplo: GET /exercises/1
+📤 Response 200 OK: Retorna el objeto del ejercicio.
+❌ Fallos: 400 Bad Request (ID no numérico), 404 Not Found.
 
-PUT /exercises/6
-Content-Type: application/json
+POST /exercises (Crear)
+📥 Body (JSON): { "name": "Remo con Mancuerna", "muscleGroup": "Espalda", "category": "Hipertrofia" }
+📤 Response 201 Created: Retorna el nuevo objeto.
+❌ Fallos: 400 Bad Request (Faltan name, muscleGroup, o category).
 
-{
-    "name": "Martillo de Bíceps",
-    "muscleGroup": "Brazos",
-    "category": "Hipertrofia",
-    "difficulty": "Principiante"
-}
-Ejemplos de Response
-Código de Estado	Descripción
-200 OK	Éxito. Retorna el objeto actualizado.
-400 Bad Request	Faltan campos requeridos.
-404 Not Found	Ejercicio no encontrado.
-
-Exportar a Hojas de cálculo
-🩹 PATCH /exercises/:id (Actualización Parcial)
-Actualiza uno o varios campos de un ejercicio existente. No requiere todos los campos.
-
-Ejemplo de Request
-JSON
-
-PATCH /exercises/6
-Content-Type: application/json
-
-{
-    "difficulty": "Avanzado"
-}
-Ejemplos de Response
-Código de Estado	Descripción
-200 OK	Éxito. Retorna el objeto actualizado.
-404 Not Found	Ejercicio no encontrado.
+🗓️ Workout Plans API (/workout-plans)
+Método	Ruta	Descripción
+GET	/workout-plans	Listar con filtros (userId, limit).
+GET	/workout-plans/:id	Obtener plan por ID.
+POST	/workout-plans	Crear plan (Requiere userId, name).
+PUT/PATCH	/workout-plans/:id	Actualización total/parcial.
+DELETE	/workout-plans/:id	Eliminar plan.
 
 Exportar a Hojas de cálculo
-🗑️ DELETE /exercises/:id (Eliminación)
-Elimina un ejercicio por su ID.
+GET /workout-plans (Lista)
+Query Params: userId (number), limit (number).
+📥 Ejemplo: GET /workout-plans?userId=2
+📤 Response 200 OK: Retorna la lista filtrada.
 
-Ejemplo de Request
-DELETE /exercises/10
+POST /workout-plans (Crear)
+📥 Body (JSON): { "userId": 7, "name": "Rutina de Descanso Activo" }
+📤 Response 201 Created: Retorna el nuevo plan.
+❌ Fallos: 400 Bad Request (Faltan userId o name).
 
-Ejemplos de Response
-Código de Estado	Descripción
-204 No Content	Éxito. Eliminación completada. (No devuelve cuerpo).
-404 Not Found	Ejercicio no encontrado.
+PUT /workout-plans/:id (Actualización Total)
+Requisitos: Requiere userId y name en el cuerpo.
+❌ Fallos: 400 Bad Request (Faltan campos), 404 Not Found.
 
+DELETE /workout-plans/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found.
