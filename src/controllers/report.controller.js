@@ -50,3 +50,27 @@ const getReportById = (req, res) => {
 
     res.status(200).json(report);
 };
+
+// POST /reports → crear reporte
+const createReport = (req, res) => {
+    const { userId, workoutPlanId, scheduleId, date, totalDuration, caloriesBurned, notes } = req.body;
+
+    if (!userId || !workoutPlanId || !scheduleId || !date || !totalDuration) {
+        return res.status(400).json({ error: "Usuario, plan de entrenamiento, programación, fecha y duración total son requeridos" });
+    }
+
+    const newReport = {
+        id: reports.length > 0 ? reports[reports.length - 1].id + 1 : 1,
+        userId: parseInt(userId, 10),
+        workoutPlanId: parseInt(workoutPlanId, 10),
+        scheduleId: parseInt(scheduleId, 10),
+        date,
+        totalDuration: parseInt(totalDuration, 10),
+        caloriesBurned: caloriesBurned || 0,
+        notes: notes || "",
+        createdAt: new Date().toISOString(),
+    };
+
+    reports.push(newReport);
+    res.status(201).json(newReport);
+};
