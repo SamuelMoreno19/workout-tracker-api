@@ -45,3 +45,24 @@ const getWorkoutPlanById = (req, res) => {
     res.status(200).json(plan);
 };
 
+// POST /workout-plans → crear plan
+const createWorkoutPlan = (req, res) => {
+    const { userId, name } = req.body;
+
+    if (!userId || !name) {
+        return res.status(400).json({ error: "ID de usuario y nombre son requeridos" });
+    }
+
+    const newPlan = {
+        id: workoutPlans.length > 0 ? workoutPlans[workoutPlans.length - 1].id + 1 : 1,
+        userId: parseInt(userId, 10),
+        name,
+        dateCreated: new Date().toISOString().split('T')[0],
+        exercisesCount: 0,
+        createdAt: new Date().toISOString(),
+    };
+
+    workoutPlans.push(newPlan);
+    res.status(201).json(newPlan);
+};
+
