@@ -74,3 +74,49 @@ const createReport = (req, res) => {
     reports.push(newReport);
     res.status(201).json(newReport);
 };
+
+// PUT /reports/:id → actualización total
+const updateReport = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { userId, workoutPlanId, scheduleId, date, totalDuration, caloriesBurned, notes } = req.body;
+
+    const index = reports.findIndex(r => r.id === id);
+    if (index === -1) return res.status(404).json({ error: "Reporte no encontrado" });
+
+    if (!userId || !workoutPlanId || !scheduleId || !date || !totalDuration) {
+        return res.status(400).json({ error: "Usuario, plan de entrenamiento, programación, fecha y duración total son requeridos para actualización completa" });
+    }
+
+    reports[index] = { 
+        ...reports[index], 
+        userId: parseInt(userId, 10), 
+        workoutPlanId: parseInt(workoutPlanId, 10), 
+        scheduleId: parseInt(scheduleId, 10), 
+        date, 
+        totalDuration: parseInt(totalDuration, 10), 
+        caloriesBurned, 
+        notes 
+    };
+    res.status(200).json(reports[index]);
+};
+
+// PATCH /reports/:id → actualización parcial
+const patchReport = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { userId, workoutPlanId, scheduleId, date, totalDuration, caloriesBurned, notes } = req.body;
+
+    const index = reports.findIndex(r => r.id === id);
+    if (index === -1) return res.status(404).json({ error: "Reporte no encontrado" });
+
+    reports[index] = { 
+        ...reports[index], 
+        ...(userId && { userId: parseInt(userId, 10) }), 
+        ...(workoutPlanId && { workoutPlanId: parseInt(workoutPlanId, 10) }), 
+        ...(scheduleId && { scheduleId: parseInt(scheduleId, 10) }), 
+        ...(date && { date }), 
+        ...(totalDuration && { totalDuration: parseInt(totalDuration, 10) }), 
+        ...(caloriesBurned && { caloriesBurned }), 
+        ...(notes && { notes }) 
+    };
+    res.status(200).json(reports[index]);
+};
