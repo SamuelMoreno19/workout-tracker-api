@@ -86,3 +86,43 @@ Requisitos: Requiere userId y name en el cuerpo.
 DELETE /workout-plans/:id (Eliminar)
 📤 Response 204 No Content: Eliminación exitosa.
 ❌ Fallos: 404 Not Found.
+
+-------------------------------------
+
+📈 Progress API (/progress)
+Este módulo gestiona el registro y seguimiento de métricas de entrenamiento completadas.
+
+Método	Ruta	Descripción
+GET	/progress	Listar con filtros (userId, workoutPlanId, date, limit).
+GET	/progress/:id	Obtener registro por ID.
+POST	/progress	Crear registro (Requiere userId, workoutPlanId, date, durationMinutes).
+PUT/PATCH	/progress/:id	Actualización total/parcial.
+DELETE	/progress/:id	Eliminar registro.
+
+Exportar a Hojas de cálculo
+GET /progress (Lista)
+Query Params: userId, workoutPlanId, date, limit.
+📥 Ejemplo: GET /progress?userId=1&limit=2
+📤 Response 200 OK: Retorna la lista filtrada de registros.
+
+POST /progress (Crear)
+📥 Body (JSON):
+
+JSON
+
+{
+  "userId": 5, 
+  "workoutPlanId": 1, 
+  "date": "2024-01-18", 
+  "durationMinutes": 65
+}
+📤 Response 201 Created: Retorna el nuevo objeto.
+❌ Fallos: 400 Bad Request (Faltan userId, workoutPlanId, date, o durationMinutes).
+
+PUT /progress/:id (Actualización Total)
+Requisitos: Requiere todos los campos obligatorios del POST.
+❌ Fallos: 400 Bad Request (Faltan campos), 404 Not Found.
+
+DELETE /progress/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found.
