@@ -72,3 +72,33 @@ const createExercise = (req, res) => {
     exercises.push(newExercise);
     res.status(201).json(newExercise);
 };
+
+// PUT /exercises/:id → actualización total
+const updateExercise = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { name, muscleGroup, category, difficulty } = req.body;
+
+    const index = exercises.findIndex(e => e.id === id);
+    if (index === -1) return res.status(404).json({ error: "Ejercicio no encontrado" });
+
+    if (!name || !muscleGroup || !category) {
+        return res.status(400).json({ error: "Nombre, grupo muscular y categoría son requeridos para actualización completa" });
+    }
+
+    exercises[index] = { ...exercises[index], name, muscleGroup, category, difficulty };
+    res.status(200).json(exercises[index]);
+};
+
+// PATCH /exercises/:id → actualización parcial
+const patchExercise = (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const { name, muscleGroup, category, difficulty } = req.body;
+
+    const index = exercises.findIndex(e => e.id === id);
+    if (index === -1) return res.status(404).json({ error: "Ejercicio no encontrado" });
+
+    exercises[index] = { ...exercises[index], ...(name && { name }), ...(muscleGroup && { muscleGroup }), ...(category && { category }), ...(difficulty && { difficulty }) };
+    res.status(200).json(exercises[index]);
+};
+
+
