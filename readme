@@ -168,3 +168,47 @@ Requisitos: Requiere todos los campos obligatorios del POST.
 DELETE /workout-schedules/:id (Eliminar)
 📤 Response 204 No Content: Eliminación exitosa.
 ❌ Fallos: 404 Not Found.
+-------------------------------------
+
+📄 Reports API (/reports)
+Este módulo maneja los reportes detallados de sesiones de entrenamiento completadas, incluyendo métricas y notas.
+
+Método	Ruta	Descripción
+GET	/reports	Listar reportes con filtros (userId, workoutPlanId, date, limit).
+GET	/reports/:id	Obtener reporte por ID.
+POST	/reports	Crear reporte (Requiere userId, workoutPlanId, scheduleId, date, totalDuration).
+PUT/PATCH	/reports/:id	Actualización total/parcial.
+DELETE	/reports/:id	Eliminar reporte.
+
+Exportar a Hojas de cálculo
+GET /reports (Lista)
+Query Params: userId, workoutPlanId, date, limit.
+📥 Ejemplo: GET /reports?userId=1&date=2024-01-16
+📤 Response 200 OK: Retorna la lista filtrada de reportes.
+
+POST /reports (Crear)
+Campos requeridos: userId, workoutPlanId, scheduleId, date, totalDuration.
+📥 Body (JSON):
+
+JSON
+
+{
+  "userId": 1,
+  "workoutPlanId": 9,
+  "scheduleId": 9,
+  "date": "2024-01-22",
+  "totalDuration": 80,
+  "caloriesBurned": 520
+}
+📤 Response 201 Created: Retorna el nuevo objeto.
+❌ Fallos: 400 Bad Request (Faltan campos requeridos).
+
+PUT /reports/:id & PATCH /reports/:id (Actualizar)
+Método	Requisitos	Fallos Comunes
+PUT	Requiere todos los campos obligatorios del POST.	400 Bad Request (Faltan campos), 404 Not Found.
+PATCH	Envía solo campos a modificar.	404 Not Found.
+
+Exportar a Hojas de cálculo
+DELETE /reports/:id (Eliminar)
+📤 Response 204 No Content: Eliminación exitosa.
+❌ Fallos: 404 Not Found.
