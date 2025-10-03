@@ -131,3 +131,13 @@ const deleteReport = (req, res) => {
     reports.splice(index, 1);
     res.status(204).send();
 };
+
+// Exportar controladores
+module.exports = {
+    getReports,
+    getReportById,
+    createReport,
+    updateReport,
+    patchReport,
+    deleteReport,
+};
